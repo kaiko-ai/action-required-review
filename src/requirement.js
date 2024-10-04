@@ -144,6 +144,7 @@ class Requirement {
 	 * @param {string[]|string} config.paths   - Paths this requirement applies to. Either an array of picomatch globs, or the string "unmatched".
 	 * @param {Array}           config.teams   - Team reviews requirements.
 	 * @param {boolean}         config.consume - Whether matched paths should be ignored by later rules.
+	 * @param {number}          config.minReviewers - Minimum number of reviewers required. Defaults to 1.
 	 */
 	constructor( config ) {
 		this.name = config.name || 'Unnamed requirement';
@@ -191,6 +192,7 @@ class Requirement {
 
 		this.reviewerFilter = buildReviewerFilter( config, { 'any-of': config.teams }, '  ' );
 		this.consume = !! config.consume;
+		this.minReviewers = config.minReviewers || 1; // Default to 1 reviewer.
 	}
 
 	// eslint-disable-next-line jsdoc/require-returns, jsdoc/require-returns-check -- Doesn't support documentation of object structure.

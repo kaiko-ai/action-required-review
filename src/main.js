@@ -71,6 +71,7 @@ async function main() {
 
 		let matchedPaths = [];
 		const teamsNeededForReview = new Set();
+		const reviewersNeededForRequirement = new Map();
 		for ( let i = 0; i < requirements.length; i++ ) {
 			const r = requirements[ i ];
 			core.startGroup( `Checking requirement "${ r.name }"...` );
@@ -83,14 +84,20 @@ async function main() {
 				const neededForRequirement = await r.needsReviewsFrom( reviewers );
 				core.endGroup();
 				if ( neededForRequirement.length === 0 ) {
-					core.info( `Requirement "${ r.name }" is satisfied by the existing reviews.` );
+					// Check if the minimum number of reviewers is met.
+					if ( reviewers.length < r.minReviewers ) {
+						core.error( `Requirement "${ r.name }" is not satisfied because the minimum number of reviewers (${ r.minReviewers }) is not met.` );
+						reviewersNeededForRequirement.set( r.name, r.minReviewers - reviewers.length );
+					} else {
+						core.info( `Requirement "${ r.name }" is satisfied by the existing reviews.` );
+					}
 				} else {
 					core.error( `Requirement "${ r.name }" is not satisfied by the existing reviews.` );
 					neededForRequirement.forEach( teamsNeededForReview.add, teamsNeededForReview );
 				}
 			}
 		}
-		if ( teamsNeededForReview.size === 0 ) {
+		if ( teamsNeededForReview.size === 0 && reviewersNeededForRequirement.size === 0 ) {
 			await reporter.status( reporter.STATE_SUCCESS, 'All required reviews have been provided!' );
 		} else {
 			await reporter.status(
