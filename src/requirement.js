@@ -190,7 +190,8 @@ class Requirement {
 			);
 		}
 
-		this.reviewerFilter = buildReviewerFilter( config, { 'any-of': config.teams }, '  ' );
+		this.teams = [ ...config.teams ];
+		this.reviewerFilter = buildReviewerFilter( config, { 'any-of': this.teams }, '  ' );
 		this.consume = !! config.consume;
 		this.minReviewers = config.minReviewers || 1; // Default to 1 reviewer.
 	}
@@ -241,7 +242,7 @@ class Requirement {
 	 * Test whether this requirement is satisfied.
 	 *
 	 * @param {string[]} reviewers - Reviewers to test against.
-	 * @return {boolean} Whether the requirement is satisfied.
+	 * @return {string[]} The teams that need to review.
 	 */
 	async needsReviewsFrom( reviewers ) {
 		core.info( 'Checking reviewers...' );
