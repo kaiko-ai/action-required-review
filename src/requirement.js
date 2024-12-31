@@ -190,7 +190,8 @@ class Requirement {
 			);
 		}
 
-		this.reviewerFilter = buildReviewerFilter( config, { 'any-of': config.teams }, '  ' );
+		this.teams = [ ...config.teams ];
+		this.reviewerFilter = buildReviewerFilter( config, { 'any-of': this.teams }, '  ' );
 		this.consume = !! config.consume;
 		this.minReviewers = config.minReviewers || 1; // Default to 1 reviewer.
 	}
