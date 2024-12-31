@@ -241,7 +241,7 @@ class Requirement {
 	 * Test whether this requirement is satisfied.
 	 *
 	 * @param {string[]} reviewers - Reviewers to test against.
-	 * @return {boolean} Whether the requirement is satisfied.
+	 * @return {string[]} The teams that need to review.
 	 */
 	async needsReviewsFrom( reviewers ) {
 		core.info( 'Checking reviewers...' );
