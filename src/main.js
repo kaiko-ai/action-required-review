@@ -88,6 +88,7 @@ async function main() {
 					if ( reviewers.length < r.minReviewers ) {
 						core.error( `Requirement "${ r.name }" is not satisfied because the minimum number of reviewers (${ r.minReviewers }) is not met.` );
 						reviewersNeededForRequirement.set( r.name, r.minReviewers - reviewers.length );
+						r.teams.forEach( teamsNeededForReview.add, teamsNeededForReview );
 					} else {
 						core.info( `Requirement "${ r.name }" is satisfied by the existing reviews.` );
 					}
