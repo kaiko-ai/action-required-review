@@ -36279,7 +36279,8 @@ class Requirement {
 			);
 		}
 
-		this.reviewerFilter = buildReviewerFilter( config, { 'any-of': config.teams }, '  ' );
+		this.teams = [ ...config.teams ];
+		this.reviewerFilter = buildReviewerFilter( config, { 'any-of': this.teams }, '  ' );
 		this.consume = !! config.consume;
 		this.minReviewers = config.minReviewers || 1; // Default to 1 reviewer.
 	}
@@ -38443,7 +38444,7 @@ async function main() {
 					if ( reviewers.length < r.minReviewers ) {
 						core.error( `Requirement "${ r.name }" is not satisfied because the minimum number of reviewers (${ r.minReviewers }) is not met.` );
 						reviewersNeededForRequirement.set( r.name, r.minReviewers - reviewers.length );
-						neededForRequirement.forEach( teamsNeededForReview.add, teamsNeededForReview );
+						r.teams.forEach( teamsNeededForReview.add, teamsNeededForReview );
 					} else {
 						core.info( `Requirement "${ r.name }" is satisfied by the existing reviews.` );
 					}
